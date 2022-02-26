@@ -1,6 +1,3 @@
-之前写好了一个SpringBoot + Vue 的项目，但是还不知道怎么部署上线，于是这几天稍微学了一下 Docker ，还只是会用的阶段，就先把部署过程写下来，防止遗忘。
-
-
 
 ## 测试项目编写
 
@@ -18,11 +15,11 @@
 
 ```xml
 <dependency>
-	<groupId>org.springframework.boot</groupId>
+    <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
 <dependency>
-	<groupId>mysql</groupId>
+    <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
 </dependency>
 <dependency>
@@ -118,7 +115,7 @@ public class UserService {
 }
 ```
 
-4. Controller，RESTful API 风格，返回格式已经封装好（参照[后端接口返回结果统一封装 (wangjialei.xyz)](https://blog.wangjialei.xyz/p/后端接口返回结果统一封装/)）
+4. Controller，RESTful API 风格，返回格式已经封装好（参照[后端接口返回结果统一封装 (blog.wangjialei.xyz)](https://blog.wangjialei.xyz/posts/后端接口返回结果统一封装/)）
 
 ```java
 @RestController
@@ -138,11 +135,11 @@ public class UserController {
 
 测试运行成功后，使用 Maven 打包工具打包
 
-![image-20210929142440377](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929142440377.png)
+![image-20210929142440377](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929142440377.png)
 
 可以在 `target` 目录下看到打好的 `jar` 包
 
-![image-20210929142706746](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929142706746.png)
+![image-20210929142706746](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929142706746.png)
 
 ### 前端项目
 
@@ -150,7 +147,7 @@ public class UserController {
 
 使用 vue/cli 创建 Vue3 项目，按照图中配置即可
 
-![image-20210929143040689](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929143040689.png)
+![image-20210929143040689](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929143040689.png)
 
 进入项目后删除不必要的文件，具体看仓库
 
@@ -177,13 +174,56 @@ export default request
 然后再封装查询所有用户信息的请求
 
 ```js
-// api/user.jsimport request from '../utils/request'// 查询所有用户export function getAllUser () {  return request({    url: '/user',    method: 'get'  })}
+// api/user.js
+import request from '../utils/request'
+// 查询所有用户
+export function getAllUser () {  
+  return request({    
+    url: '/user',    
+    method: 'get'  
+  })
+}
 ```
 
 直接在首页展示
 
 ```vue
-// Home.vue<template>  <div>    <div v-for="user in users" :key="user" style="margin: 20px 20px 20px 20px;">      <p>{{ user.id }}</p>      <p>{{ user.username }}</p>      <p>{{ user.password }}</p>      <p>{{ user.age }}</p>      <p v-if="user.gendar === true">男</p>      <p v-if="user.gendar === false">女</p>      <p>{{ user.address }}</p>    </div>  </div></template><script>import { getAllUser } from '../api/user'export default {  name: 'Home',  data () {    return {      users: []    }  },  created () {    this.load()  },  methods: {    load () {      getAllUser().then(data => {        this.users = data.data.data      })    }  }}</script>
+// Home.vue
+<template>  
+  <div>    
+    <div v-for="user in users" :key="user" style="margin: 20px 20px 20px 20px;">      
+      <p>{{ user.id }}</p>      
+      <p>{{ user.username }}</p>      
+      <p>{{ user.password }}</p>      
+      <p>{{ user.age }}</p>      
+      <p v-if="user.gendar === true">男</p>      
+      <p v-if="user.gendar === false">女</p>      
+      <p>{{ user.address }}</p>    
+    </div>  
+  </div>
+</template>
+
+<script>
+import { getAllUser } from '../api/user'
+export default {  
+  name: 'Home',  
+  data () {    
+    return {      
+      users: []    
+    }  
+  },  
+  created () {    
+    this.load()  
+  },  
+  methods: {    
+    load () {      
+      getAllUser().then(data => {        
+        this.users = data.data.data      
+      })    
+    }  
+  }
+}
+</script>
 ```
 
 执行 `npm run serve` 访问指定的端口没问题的话，打包
@@ -194,7 +234,7 @@ npm run build
 
 可以看到项目打包到 `dist` 目录下
 
-![image-20210929144032895](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929144032895.png)
+![image-20210929144032895](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929144032895.png)
 
 ## Docker 部署上线
 
@@ -216,11 +256,11 @@ docker run --name mysql01-web -p 3306:3306 -v /home/web/data:/var/lib/mysql -e M
 
 使用 `docker ps` 命令，查看当前正在运行的容器：
 
-![image-20210929145308922](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929145308922.png)
+![image-20210929145308922](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929145308922.png)
 
 可以看到正在运行的有三个容器，最后一个 `mysql01-web` 就是创建的这个 MySQL 容器，使用数据库连接工具连接一下该数据库，连接之前确定 3306 端口开放
 
-![image-20210929145502174](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929145502174.png)
+![image-20210929145502174](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929145502174.png)
 
 我们在服务器的数据库里创建对应的表，然后随便插入几条数据方便后面测试
 
@@ -234,7 +274,7 @@ FROM openjdk:17COPY *.jar /app.jarENTRYPOINT ["java","-jar","/app.jar"]
 
 然后我们把打包好的 jar 文件和 Dockerfile 上传到服务器 `/home/web/server` 目录下
 
-![image-20210929145832880](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929145832880.png)
+![image-20210929145832880](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929145832880.png)
 
 使用 `docker build` 命令构建镜像
 
@@ -250,7 +290,7 @@ docker run -p 8080:8080 --name server01-web -d wjl/web
 
 使用 `docker ps` 查看是否正常运行，若正常，访问 `ip:8080/user` 应该可以看到之前插入的几条数据
 
-![image-20210929150352830](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929150352830.png)
+![image-20210929150352830](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929150352830.png)
 
 ### Nginx 容器
 
@@ -263,12 +303,19 @@ FROM nginxCOPY dist/ /usr/share/nginx/html/COPY nginx/default.conf /etc/nginx/co
 然后再创建一个 `nginx` 目录，在目录下创建 nginx 配置文件 `default.conf`
 
 ```conf
-server {    listen       80;    server_name  localhost;    location / {        root   /usr/share/nginx/html;        index  index.html index.htm;    }}
+server {    
+  listen       80;    
+  server_name  localhost;    
+  location / {        
+    root   /usr/share/nginx/html;        
+    index  index.html index.htm;    
+  }
+}
 ```
 
 把 `/dist` 、 `/nginx` 和 `Dockerfile` 一起上传到服务器 `/home/web/app` 目录下
 
-![image-20210929150821712](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929150821712.png)
+![image-20210929150821712](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929150821712.png)
 
 使用 `docker build` 命令构建镜像
 
@@ -284,7 +331,7 @@ docker run -p 80:80 -d --name nginx01-web wjl/nginx
 
 使用 `docker ps` 查看是否正常运行，若正常，直接访问服务器公网 ip 应该可以看到数据了
 
-![image-20210929151119771](https://gitee.com/wang-jia-lei/mypic/raw/master/image-20210929151119771.png)
+![image-20210929151119771](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929151119771.png)
 
 完成！
 
