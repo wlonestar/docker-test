@@ -118,7 +118,7 @@ public class UserService {
 }
 ```
 
-4. Controller，RESTful API 风格，返回格式已经封装好（参照[后端接口返回结果统一封装 (wangjialei.xyz)](https://blog.wangjialei.xyz/p/后端接口返回结果统一封装/)）
+4. Controller，RESTful API 风格，返回格式已经封装好（参照[后端接口返回结果统一封装 (wangjialei.xyz)](https://blog.wangjialei.xyz/posts/后端接口返回结果统一封装/)）
 
 ```java
 @RestController
