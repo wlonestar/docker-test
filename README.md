@@ -268,8 +268,10 @@ docker run --name mysql01-web -p 3306:3306 -v /home/web/data:/var/lib/mysql -e M
 
 这里我们要自己写 Dockerfile
 
-```Do
-FROM openjdk:17COPY *.jar /app.jarENTRYPOINT ["java","-jar","/app.jar"]
+```Dockerfile
+FROM openjdk:17
+COPY *.jar /app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
 ```
 
 然后我们把打包好的 jar 文件和 Dockerfile 上传到服务器 `/home/web/server` 目录下
@@ -296,8 +298,10 @@ docker run -p 8080:8080 --name server01-web -d wjl/web
 
 同样的，我们在前端项目中写一个 Dockerfile
 
-```do
-FROM nginxCOPY dist/ /usr/share/nginx/html/COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+```Dockerfile
+FROM nginx
+COPY dist/ /usr/share/nginx/html/
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 ```
 
 然后再创建一个 `nginx` 目录，在目录下创建 nginx 配置文件 `default.conf`
@@ -334,8 +338,4 @@ docker run -p 80:80 -d --name nginx01-web wjl/nginx
 ![image-20210929151119771](https://gitee.com/wjl-lab/mypic/raw/master/image-20210929151119771.png)
 
 完成！
-
-
-
-
 
